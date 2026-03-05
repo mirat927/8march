@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Игра 16 уровней</title>
+<style>
+body{
+font-family:Arial;
+text-align:center;
+background: linear-gradient(135deg,#ff9abf,#ffd6e7);
+margin:0;
+}
+
+h1{margin-top:20px;}
+#level, #timer{font-size:22px;margin:10px;}
+#game{margin-top:30px;}
+button{
+padding:12px 20px;margin:10px;font-size:18px;
+border:none;border-radius:10px;background:#ff4f8b;color:white;
+cursor:pointer;
+}
+.cell{
+font-size:28px;padding:12px;margin:6px;display:inline-block;
+background:white;border-radius:12px;cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>🎮 Игра 16 уровней</h1>
+<div id="level"></div>
+<div id="timer"></div>
+<div id="game"></div>
+
+<script>
+let level = 1;
+const totalLevels = 16;
+let timer;
+const timePerLevel = 15; // секунд
+const game = document.getElementById("game");
+
+function updateUI(){
+document.getElementById("level").textContent = "Уровень " + level + " / " + totalLevels;
+}
+
+function startTimer(){
+let timeLeft = timePerLevel;
+document.getElementById("timer").textContent = "Время: "+timeLeft+" сек";
+clearInterval(timer);
+timer = setInterval(()=>{
+timeLeft--;
+document.getElementById("timer").textContent = "Время: "+timeLeft+" сек";
+if(timeLeft<=0){
+clearInterval(timer);
+alert("Время вышло! Попробуй ещё раз.");
+startLevel();
+}
+},1000);
+}
+
+function nextLevel(){
+clearInterval(timer);
+level++;
+if(level>totalLevels){
+game.innerHTML="<h2>🎉 Поздравляем! Ты прошла все уровни!</h2><button onclick='restart()'>Играть снова</button>";
+return;
+}
+startLevel();
+}
+
+function restart(){level=1; startLevel();}
+
+function startLevel(){
+updateUI();
+game.innerHTML="";
+startTimer();
+
+// ---- уровни ----
+switch(level){
+case 1: logic1(); break;
+case 2: math1(); break;
+case 3: quiz1(); break;
+case 4: logic2(); break;
+case 5: funFact1(); break;
+case 6: math2(); break;
+case 7: quiz2(); break;
+case 8: logic3(); break;
+case 9: funFact2(); break;
+case 10: math3(); break;
+case 11: quiz3(); break;
+case 12: logic4(); break;
+case 13: funFact3(); break;
+case 14: math4(); break;
+case 15: quiz4(); break;
+case 16: finalBoss(); break;
+default: break;
+}
+}
+
+// ---- Функция для создания кнопок ----
+function createAnswers(options, correct){
+options.forEach(opt=>{
+let btn = document.createElement("button");
+btn.textContent = opt;
+btn.onclick = function(){
+if(opt === correct){nextLevel();} else {btn.textContent="❌";}
+};
+game.appendChild(btn);
+});
+
+// Чтобы 15-секундный таймер точно срабатывал, он запускается отдельно.
+}
+
+// ---- Логические задачи ----
+function logic1(){
+game.innerHTML="<h2>У Марины есть 3 косметички: красная, синяя и розовая. Она взяла синюю. Какая осталась?</h2>";
+createAnswers(["Красная","Синяя","Розовая"],"Красная");
+}
+
+function logic2(){
+game.innerHTML="<h2>На столе лежат 3 баночки помады: красная, розовая и фиолетовая. Девочка взяла фиолетовую. Что осталось?</h2>";
+createAnswers(["Красная","Розовая","Фиолетовая"],"Красная");
+}
+
+function logic3(){
+game.innerHTML="<h2>3 девочки взяли 3 аксессуара: заколку, браслет, резинку. Кто взял браслет?</h2>";
+createAnswers(["Анна","Катя","Лиза"],"Катя");
+}
+
+function logic4(){
+game.innerHTML="<h2>На полке лежат 3 расчески: маленькая, средняя, большая. Девочка взяла среднюю. Что осталось?</h2>";
+createAnswers(["Маленькая","Средняя","Большая"],"Маленькая");
+}
+
+// ---- Математика ----
+function math1(){game.innerHTML="<h2>Сколько будет 25 + 17?</h2>"; createAnswers([42,43,44],42);}
+function math2(){game.innerHTML="<h2>12 × 4 = ?</h2>"; createAnswers([48,52,56],48);}
+function math3(){game.innerHTML="<h2>100 ÷ 5 = ?</h2>"; createAnswers([15,20,25],20);}
+function math4(){game.innerHTML="<h2>7 × 8 = ?</h2>"; createAnswers([54,56,58],56);}
+
+// ---- Викторины про вещи девочек ----
+function quiz1(){game.innerHTML="<h2>Какой блеск для губ нравится Анне?</h2>"; createAnswers(["Розовый","Красный","Прозрачный"],"Розовый");}
+function quiz2(){game.innerHTML="<h2>Какой лак для ногтей у Кати?</h2>"; createAnswers(["Синий","Красный","Зелёный"],"Красный");}
+function quiz3(){game.innerHTML="<h2>Какой аромат у духов Лизы?</h2>"; createAnswers(["Цветочный","Фруктовый","Пряный"],"Фруктовый");}
+function quiz4(){game.innerHTML="<h2>Какой аксессуар чаще всего носит Маша?</h2>"; createAnswers(["Браслет","Колье","Серьги"],"Браслет");}
+
+// ---- Весёлые факты / мини-загадки ----
+function funFact1(){game.innerHTML="<h2>Собери слово: К О С М Е Т И К А</h2>"; createAnswers(["КОСМЕТИКА","КОСТЕТИКА","КИМОСЕТКА"],"КОСМЕТИКА");}
+function funFact2(){game.innerHTML="<h2>Собери слово: П Р А З Д Н И К</h2>"; createAnswers(["ПРАЗДНИК","ПРАДНИК","ПРАЗНИЧ"],"ПРАЗДНИК");}
+function funFact3(){game.innerHTML="<h2>Собери слово: Д Е В О Ч К А</h2>"; createAnswers(["ДЕВОЧКА","ДЕВОЧКАА","ДЕВОЧК"],"ДЕВОЧКА");}
+
+// ---- Финальный уровень ----
+function finalBoss(){game.innerHTML="<h2>Финальный вопрос: 5 × 6 + 7 = ?</h2>"; createAnswers([35,37,38],37);}
+
+// ---- Старт игры ----
+startLevel();
+</script>
+  <div id="quizContainer"></div>
+  <script>
+// Большая викторина
+const bigQuiz = {
+questions: [
+{
+q: "Какой блеск для губ нравится Анне?",
+options: ["Розовый","Красный","Прозрачный"],
+answer: 0
+},
+{
+q: "Какой лак для ногтей у Кати?",
+options: ["Синий","Красный","Зелёный"],
+answer: 1
+},
+{
+q: "Какой аромат у духов Лизы?",
+options: ["Цветочный","Фруктовый","Пряный"],
+answer: 1
+},
+{
+q: "Какой аксессуар чаще всего носит Маша?",
+options: ["Браслет","Колье","Серьги"],
+answer: 0
+},
+{
+q: "Сколько месяцев в году?",
+options: ["10","12","14"],
+answer: 1
+},
+{
+q: "Сколько дней в неделе?",
+options: ["5","7","9"],
+answer: 1
+},
+{
+q: "Собери слово: К О С М Е Т И К А",
+options: ["КОСМЕТИКА","КОСТЕТИКА","КИМОСЕТКА"],
+answer: 0
+},
+{
+q: "Собери слово: П Р А З Д Н И К",
+options: ["ПРАЗДНИК","ПРАДНИК","ПРАЗНИЧ"],
+answer: 0
+}
+],
+
+current: 0,
+score: 0,
+timePerQuestion: 15,
+timer: null,
+
+start: function(containerId){
+this.current = 0;
+this.score = 0;
+this.container = document.getElementById(containerId);
+this.showQuestion();
+},
+
+showQuestion: function(){
+if(this.current >= this.questions.length){
+this.showResult();
+return;
+}
+const q = this.questions[this.current];
+this.container.innerHTML = `<h2>${q.q}</h2>`;
+q.options.forEach((opt,i)=>{
+  const btn = document.createElement("button");
+  btn.textContent = opt;
+  btn.onclick = () => this.checkAnswer(i);
+  this.container.appendChild(btn);
+});
+// Таймер
+let timeLeft = this.timePerQuestion;
+const timerDiv = document.createElement("div");
+timerDiv.id="quizTimer";
+timerDiv.style.fontSize="20px";
+timerDiv.style.margin="10px";
+timerDiv.textContent = `Время: ${timeLeft} сек`;
+this.container.appendChild(timerDiv);
+
+clearInterval(this.timer);
+this.timer = setInterval(()=>{
+  timeLeft--;
+  timerDiv.textContent = `Время: ${timeLeft} сек`;
+  if(timeLeft <= 0){
+    clearInterval(this.timer);
+    alert("Время вышло! Переход к следующему вопросу.");
+    this.current++;
+    this.showQuestion();
+  }
+},1000);
+},
+
+checkAnswer: function(i){
+clearInterval(this.timer);
+if(i === this.questions[this.current].answer){
+this.score++;
+}
+this.current++;
+this.showQuestion();
+},
+
+showResult: function(){
+this.container.innerHTML = `<h2>Викторина завершена!</h2><p>Правильных ответов: ${this.score} из ${this.questions.length}</p><button onclick="bigQuiz.start('${this.container.id}')">Пройти снова</button>`;
+}
+};
+</script>
+</body>
+</html>
